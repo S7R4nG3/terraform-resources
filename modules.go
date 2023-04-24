@@ -36,9 +36,9 @@ func (p Plan) ParseModules() ([]Module, error) {
 		path = p.ModulesFilePath
 		// If not supplied but it doesn't exist - return a more meaningful error
 	} else if p.ModulesFilePath != "" && !fileExists(p.ModulesFilePath) {
-		errMessage := fmt.Sprintf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
-		err := errors.New(errMessage)
-		return []Module{}, err
+		// errMessage := fmt.Sprintf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
+		// err := errors.New(errMessage)
+		return []Module{}, fmt.Errorf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
 		// Else check for the default path and if it doesn't exist return early - no modules declared
 	} else if p.ModulesFilePath == "" {
 		tfDefaultModulesPath := filepath.Join(cwd, ".terraform", "modules", "modules.json")

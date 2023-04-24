@@ -47,6 +47,13 @@ type Plan struct {
 	// the file path to your Terraform plan file that is to be parsed.
 	// If PlanFile is not specified, the current program will exit
 	// with an os.exit(1) error code.
+	//
+	// The specified PlanFile MUST be in JSON format. This can be
+	// accomplished with Terraform itself using the following commands:
+	//
+	// 		terraform plan -out=plan.tfplan
+	//		terraform show -json plan.tfpla > plan.json
+	//
 	PlanFile string
 
 	// ModulesFilePath is an optional entrypoint parameter that can be
@@ -54,8 +61,9 @@ type Plan struct {
 	// modules that are being used for a particular Terraform plan.
 	// If not specified, the current program will default to Terraform's
 	// default file path of `.terraform/modules/modules.json`.
-	// If the default path is unable to be found, the current program
-	// will exit with an os.exit(1) error code.
+	// If unable to locate a modules file at the default path, it will
+	// assume the deployment has no declared modules and list only the
+	// resources.
 	ModulesFilePath string
 
 	// A Resource container used to contain the results of parsing the

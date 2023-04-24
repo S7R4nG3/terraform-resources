@@ -1,9 +1,11 @@
 package tfresources
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"runtime"
+	"strings"
 )
 
 func fileExists(path string) bool {
@@ -30,4 +32,16 @@ func removeString(regexes []string, source string) string {
 		working = re.ReplaceAllString(working, "")
 	}
 	return working
+}
+
+func testResults(name string, diffs []string) string {
+	yellow := "\033[33m"
+	end := "\033[0m"
+	s := []string{fmt.Sprintf("FAILED :: %s :: %sDiffs: ", name, newline())}
+	for _, d := range diffs {
+		t := yellow + d + end
+		s = append(s, t)
+	}
+	r := strings.Join(s, newline())
+	return r
 }
