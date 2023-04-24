@@ -2,6 +2,7 @@ package tfresources
 
 import (
 	"os"
+	"regexp"
 	"runtime"
 )
 
@@ -20,4 +21,13 @@ func newline() string {
 		return "\n"
 	}
 
+}
+
+func removeString(regexes []string, source string) string {
+	working := source
+	for _, regex := range regexes {
+		re := regexp.MustCompile(regex)
+		working = re.ReplaceAllString(working, "")
+	}
+	return working
 }

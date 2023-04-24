@@ -36,8 +36,27 @@ func (p Plan) ParsePlan() ([]tfjson.StateResource, error) {
 		er := errors.Join(fmt.Errorf("error unmarshaling json contents of %s", p.PlanFile), err)
 		return resources, er
 	}
-	for _, res := range planContent.PlannedValues.RootModule.Resources {
-		resources = append(resources, *res)
-	}
+
+	rootModule := planContent.PlannedValues.RootModule
+	children := planContent.PlannedValues.RootModule.ChildModules
+	parseRootModuleResources(rootModule, &resources)
+	parseChildModuleResources(children, &resources)
 	return resources, nil
+}
+
+func parseRootModuleResources(root *tfjson.StateModule, resources *[]tfjson.StateResource) {
+	for _, resource := range root.Resources {
+		*resources = append(*resources, *resource)
+	}
+}
+
+func parseChildModuleResources(children []*tfjson.StateModule, resources *[]tfjson.StateResource) {
+	for _, child := range children {
+		for _, res := range child.Resources {
+			*resources = append(*resources, *res)
+		}
+		if child.ChildModules != nil {
+			parseChildModuleResources(child.ChildModules, resources)
+		}
+	}
 }

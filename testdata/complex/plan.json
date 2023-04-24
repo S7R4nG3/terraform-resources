@@ -1,0 +1,1518 @@
+{
+    "format_version": "1.1",
+    "terraform_version": "1.4.3-dev",
+    "planned_values": {
+        "outputs": {
+            "bucket": {
+                "sensitive": false
+            },
+            "role": {
+                "sensitive": false
+            }
+        },
+        "root_module": {
+            "resources": [
+                {
+                    "address": "aws_iam_policy.policy",
+                    "mode": "managed",
+                    "type": "aws_iam_policy",
+                    "name": "policy",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "description": null,
+                        "name": "a-fancy-iam-policy",
+                        "path": "/",
+                        "tags": null
+                    },
+                    "sensitive_values": {
+                        "tags_all": {}
+                    }
+                },
+                {
+                    "address": "data.aws_iam_policy_document.policy",
+                    "mode": "data",
+                    "type": "aws_iam_policy_document",
+                    "name": "policy",
+                    "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "override_json": null,
+                        "override_policy_documents": null,
+                        "policy_id": null,
+                        "source_json": null,
+                        "source_policy_documents": null,
+                        "statement": [
+                            {
+                                "actions": [
+                                    "s3:ListBucket"
+                                ],
+                                "condition": [],
+                                "effect": "Allow",
+                                "not_actions": null,
+                                "not_principals": [],
+                                "not_resources": null,
+                                "principals": [],
+                                "resources": [
+                                    null
+                                ],
+                                "sid": null
+                            }
+                        ],
+                        "version": null
+                    },
+                    "sensitive_values": {
+                        "statement": [
+                            {
+                                "actions": [
+                                    false
+                                ],
+                                "condition": [],
+                                "not_principals": [],
+                                "principals": [],
+                                "resources": [
+                                    false
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "child_modules": [
+                {
+                    "resources": [
+                        {
+                            "address": "module.iam_role.aws_iam_role.this[0]",
+                            "mode": "managed",
+                            "type": "aws_iam_role",
+                            "name": "this",
+                            "index": 0,
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Condition\":{\"Bool\":{\"aws:MultiFactorAuthPresent\":\"true\"},\"NumericLessThan\":{\"aws:MultiFactorAuthAge\":\"86400\"}},\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::242797880662:root\",\"Service\":[]},\"Sid\":\"\"}],\"Version\":\"2012-10-17\"}",
+                                "description": "",
+                                "force_detach_policies": false,
+                                "max_session_duration": 3600,
+                                "name": "custom",
+                                "path": "/",
+                                "permissions_boundary": "",
+                                "tags": null
+                            },
+                            "sensitive_values": {
+                                "inline_policy": [],
+                                "managed_policy_arns": [],
+                                "role_last_used": [],
+                                "tags_all": {}
+                            }
+                        },
+                        {
+                            "address": "module.iam_role.aws_iam_role_policy_attachment.custom[0]",
+                            "mode": "managed",
+                            "type": "aws_iam_role_policy_attachment",
+                            "name": "custom",
+                            "index": 0,
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "policy_arn": "arn:aws:iam::aws:policy/AmazonCognitoReadOnly",
+                                "role": "custom"
+                            },
+                            "sensitive_values": {}
+                        },
+                        {
+                            "address": "module.iam_role.aws_iam_role_policy_attachment.custom[1]",
+                            "mode": "managed",
+                            "type": "aws_iam_role_policy_attachment",
+                            "name": "custom",
+                            "index": 1,
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "role": "custom"
+                            },
+                            "sensitive_values": {}
+                        }
+                    ],
+                    "address": "module.iam_role"
+                },
+                {
+                    "resources": [
+                        {
+                            "address": "module.my_bucket.aws_s3_bucket.default",
+                            "mode": "managed",
+                            "type": "aws_s3_bucket",
+                            "name": "default",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "bucket": "a-fun-bucket",
+                                "force_destroy": false,
+                                "tags": {
+                                    "foo": "bar",
+                                    "tag": "value"
+                                },
+                                "tags_all": {
+                                    "foo": "bar",
+                                    "tag": "value"
+                                },
+                                "timeouts": null
+                            },
+                            "sensitive_values": {
+                                "cors_rule": [],
+                                "grant": [],
+                                "lifecycle_rule": [],
+                                "logging": [],
+                                "object_lock_configuration": [],
+                                "replication_configuration": [],
+                                "server_side_encryption_configuration": [],
+                                "tags": {},
+                                "tags_all": {},
+                                "versioning": [],
+                                "website": []
+                            }
+                        }
+                    ],
+                    "address": "module.my_bucket"
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "data.aws_iam_policy_document.policy",
+            "mode": "data",
+            "type": "aws_iam_policy_document",
+            "name": "policy",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "read"
+                ],
+                "before": null,
+                "after": {
+                    "override_json": null,
+                    "override_policy_documents": null,
+                    "policy_id": null,
+                    "source_json": null,
+                    "source_policy_documents": null,
+                    "statement": [
+                        {
+                            "actions": [
+                                "s3:ListBucket"
+                            ],
+                            "condition": [],
+                            "effect": "Allow",
+                            "not_actions": null,
+                            "not_principals": [],
+                            "not_resources": null,
+                            "principals": [],
+                            "resources": [
+                                null
+                            ],
+                            "sid": null
+                        }
+                    ],
+                    "version": null
+                },
+                "after_unknown": {
+                    "id": true,
+                    "json": true,
+                    "statement": [
+                        {
+                            "actions": [
+                                false
+                            ],
+                            "condition": [],
+                            "not_principals": [],
+                            "principals": [],
+                            "resources": [
+                                true
+                            ]
+                        }
+                    ]
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "statement": [
+                        {
+                            "actions": [
+                                false
+                            ],
+                            "condition": [],
+                            "not_principals": [],
+                            "principals": [],
+                            "resources": [
+                                false
+                            ]
+                        }
+                    ]
+                }
+            },
+            "action_reason": "read_because_config_unknown"
+        },
+        {
+            "address": "aws_iam_policy.policy",
+            "mode": "managed",
+            "type": "aws_iam_policy",
+            "name": "policy",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "description": null,
+                    "name": "a-fancy-iam-policy",
+                    "path": "/",
+                    "tags": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "id": true,
+                    "name_prefix": true,
+                    "policy": true,
+                    "policy_id": true,
+                    "tags_all": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "tags_all": {}
+                }
+            }
+        },
+        {
+            "address": "module.iam_role.aws_iam_role.this[0]",
+            "module_address": "module.iam_role",
+            "mode": "managed",
+            "type": "aws_iam_role",
+            "name": "this",
+            "index": 0,
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Condition\":{\"Bool\":{\"aws:MultiFactorAuthPresent\":\"true\"},\"NumericLessThan\":{\"aws:MultiFactorAuthAge\":\"86400\"}},\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::242797880662:root\",\"Service\":[]},\"Sid\":\"\"}],\"Version\":\"2012-10-17\"}",
+                    "description": "",
+                    "force_detach_policies": false,
+                    "max_session_duration": 3600,
+                    "name": "custom",
+                    "path": "/",
+                    "permissions_boundary": "",
+                    "tags": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "create_date": true,
+                    "id": true,
+                    "inline_policy": true,
+                    "managed_policy_arns": true,
+                    "name_prefix": true,
+                    "role_last_used": true,
+                    "tags_all": true,
+                    "unique_id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "inline_policy": [],
+                    "managed_policy_arns": [],
+                    "role_last_used": [],
+                    "tags_all": {}
+                }
+            }
+        },
+        {
+            "address": "module.iam_role.aws_iam_role_policy_attachment.custom[0]",
+            "module_address": "module.iam_role",
+            "mode": "managed",
+            "type": "aws_iam_role_policy_attachment",
+            "name": "custom",
+            "index": 0,
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "policy_arn": "arn:aws:iam::aws:policy/AmazonCognitoReadOnly",
+                    "role": "custom"
+                },
+                "after_unknown": {
+                    "id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {}
+            }
+        },
+        {
+            "address": "module.iam_role.aws_iam_role_policy_attachment.custom[1]",
+            "module_address": "module.iam_role",
+            "mode": "managed",
+            "type": "aws_iam_role_policy_attachment",
+            "name": "custom",
+            "index": 1,
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "role": "custom"
+                },
+                "after_unknown": {
+                    "id": true,
+                    "policy_arn": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {}
+            }
+        },
+        {
+            "address": "module.my_bucket.aws_s3_bucket.default",
+            "module_address": "module.my_bucket",
+            "mode": "managed",
+            "type": "aws_s3_bucket",
+            "name": "default",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "bucket": "a-fun-bucket",
+                    "force_destroy": false,
+                    "tags": {
+                        "foo": "bar",
+                        "tag": "value"
+                    },
+                    "tags_all": {
+                        "foo": "bar",
+                        "tag": "value"
+                    },
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "acceleration_status": true,
+                    "acl": true,
+                    "arn": true,
+                    "bucket_domain_name": true,
+                    "bucket_prefix": true,
+                    "bucket_regional_domain_name": true,
+                    "cors_rule": true,
+                    "grant": true,
+                    "hosted_zone_id": true,
+                    "id": true,
+                    "lifecycle_rule": true,
+                    "logging": true,
+                    "object_lock_configuration": true,
+                    "object_lock_enabled": true,
+                    "policy": true,
+                    "region": true,
+                    "replication_configuration": true,
+                    "request_payer": true,
+                    "server_side_encryption_configuration": true,
+                    "tags": {},
+                    "tags_all": {},
+                    "versioning": true,
+                    "website": true,
+                    "website_domain": true,
+                    "website_endpoint": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "cors_rule": [],
+                    "grant": [],
+                    "lifecycle_rule": [],
+                    "logging": [],
+                    "object_lock_configuration": [],
+                    "replication_configuration": [],
+                    "server_side_encryption_configuration": [],
+                    "tags": {},
+                    "tags_all": {},
+                    "versioning": [],
+                    "website": []
+                }
+            }
+        }
+    ],
+    "output_changes": {
+        "bucket": {
+            "actions": [
+                "create"
+            ],
+            "before": null,
+            "after": {
+                "bucket": "a-fun-bucket",
+                "force_destroy": false,
+                "tags": {
+                    "foo": "bar",
+                    "tag": "value"
+                },
+                "tags_all": {
+                    "foo": "bar",
+                    "tag": "value"
+                },
+                "timeouts": null
+            },
+            "after_unknown": {
+                "acceleration_status": true,
+                "acl": true,
+                "arn": true,
+                "bucket_domain_name": true,
+                "bucket_prefix": true,
+                "bucket_regional_domain_name": true,
+                "cors_rule": true,
+                "grant": true,
+                "hosted_zone_id": true,
+                "id": true,
+                "lifecycle_rule": true,
+                "logging": true,
+                "object_lock_configuration": true,
+                "object_lock_enabled": true,
+                "policy": true,
+                "region": true,
+                "replication_configuration": true,
+                "request_payer": true,
+                "server_side_encryption_configuration": true,
+                "tags": {},
+                "tags_all": {},
+                "versioning": true,
+                "website": true,
+                "website_domain": true,
+                "website_endpoint": true
+            },
+            "before_sensitive": false,
+            "after_sensitive": false
+        },
+        "role": {
+            "actions": [
+                "create"
+            ],
+            "before": null,
+            "after": {
+                "iam_instance_profile_arn": "",
+                "iam_instance_profile_id": "",
+                "iam_instance_profile_name": "",
+                "iam_instance_profile_path": "",
+                "iam_role_name": "custom",
+                "iam_role_path": "/",
+                "role_requires_mfa": true,
+                "role_sts_externalid": []
+            },
+            "after_unknown": {
+                "iam_role_arn": true,
+                "iam_role_unique_id": true,
+                "role_sts_externalid": []
+            },
+            "before_sensitive": false,
+            "after_sensitive": false
+        }
+    },
+    "prior_state": {
+        "format_version": "1.0",
+        "terraform_version": "1.4.3",
+        "values": {
+            "root_module": {
+                "resources": [
+                    {
+                        "address": "data.aws_caller_identity.this",
+                        "mode": "data",
+                        "type": "aws_caller_identity",
+                        "name": "this",
+                        "provider_name": "registry.terraform.io/hashicorp/aws",
+                        "schema_version": 0,
+                        "values": {
+                            "account_id": "242797880662",
+                            "arn": "arn:aws:sts::242797880662:assumed-role/DaveCoreEng/vault-userpass-davestreng-davecore-eng-1682366211-xjDpdtS1dTHOS5",
+                            "id": "242797880662",
+                            "user_id": "AROATRB7BUVLJEFYRQEFA:vault-userpass-davestreng-davecore-eng-1682366211-xjDpdtS1dTHOS5"
+                        },
+                        "sensitive_values": {}
+                    },
+                    {
+                        "address": "data.aws_region.this",
+                        "mode": "data",
+                        "type": "aws_region",
+                        "name": "this",
+                        "provider_name": "registry.terraform.io/hashicorp/aws",
+                        "schema_version": 0,
+                        "values": {
+                            "description": "US East (N. Virginia)",
+                            "endpoint": "ec2.us-east-1.amazonaws.com",
+                            "id": "us-east-1",
+                            "name": "us-east-1"
+                        },
+                        "sensitive_values": {}
+                    }
+                ],
+                "child_modules": [
+                    {
+                        "resources": [
+                            {
+                                "address": "module.iam_role.data.aws_caller_identity.current",
+                                "mode": "data",
+                                "type": "aws_caller_identity",
+                                "name": "current",
+                                "provider_name": "registry.terraform.io/hashicorp/aws",
+                                "schema_version": 0,
+                                "values": {
+                                    "account_id": "242797880662",
+                                    "arn": "arn:aws:sts::242797880662:assumed-role/DaveCoreEng/vault-userpass-davestreng-davecore-eng-1682366211-xjDpdtS1dTHOS5",
+                                    "id": "242797880662",
+                                    "user_id": "AROATRB7BUVLJEFYRQEFA:vault-userpass-davestreng-davecore-eng-1682366211-xjDpdtS1dTHOS5"
+                                },
+                                "sensitive_values": {}
+                            },
+                            {
+                                "address": "module.iam_role.data.aws_iam_policy_document.assume_role_with_mfa[0]",
+                                "mode": "data",
+                                "type": "aws_iam_policy_document",
+                                "name": "assume_role_with_mfa",
+                                "index": 0,
+                                "provider_name": "registry.terraform.io/hashicorp/aws",
+                                "schema_version": 0,
+                                "values": {
+                                    "id": "275323568",
+                                    "json": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"AWS\": \"arn:aws:iam::242797880662:root\",\n        \"Service\": []\n      },\n      \"Condition\": {\n        \"Bool\": {\n          \"aws:MultiFactorAuthPresent\": \"true\"\n        },\n        \"NumericLessThan\": {\n          \"aws:MultiFactorAuthAge\": \"86400\"\n        }\n      }\n    }\n  ]\n}",
+                                    "override_json": null,
+                                    "override_policy_documents": null,
+                                    "policy_id": null,
+                                    "source_json": null,
+                                    "source_policy_documents": null,
+                                    "statement": [
+                                        {
+                                            "actions": [
+                                                "sts:AssumeRole"
+                                            ],
+                                            "condition": [
+                                                {
+                                                    "test": "Bool",
+                                                    "values": [
+                                                        "true"
+                                                    ],
+                                                    "variable": "aws:MultiFactorAuthPresent"
+                                                },
+                                                {
+                                                    "test": "NumericLessThan",
+                                                    "values": [
+                                                        "86400"
+                                                    ],
+                                                    "variable": "aws:MultiFactorAuthAge"
+                                                }
+                                            ],
+                                            "effect": "Allow",
+                                            "not_actions": [],
+                                            "not_principals": [],
+                                            "not_resources": [],
+                                            "principals": [
+                                                {
+                                                    "identifiers": [
+                                                        "arn:aws:iam::242797880662:root"
+                                                    ],
+                                                    "type": "AWS"
+                                                },
+                                                {
+                                                    "identifiers": [],
+                                                    "type": "Service"
+                                                }
+                                            ],
+                                            "resources": [],
+                                            "sid": ""
+                                        }
+                                    ],
+                                    "version": "2012-10-17"
+                                },
+                                "sensitive_values": {
+                                    "statement": [
+                                        {
+                                            "actions": [
+                                                false
+                                            ],
+                                            "condition": [
+                                                {
+                                                    "values": [
+                                                        false
+                                                    ]
+                                                },
+                                                {
+                                                    "values": [
+                                                        false
+                                                    ]
+                                                }
+                                            ],
+                                            "not_actions": [],
+                                            "not_principals": [],
+                                            "not_resources": [],
+                                            "principals": [
+                                                {
+                                                    "identifiers": [
+                                                        false
+                                                    ]
+                                                },
+                                                {
+                                                    "identifiers": []
+                                                }
+                                            ],
+                                            "resources": []
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "module.iam_role.data.aws_partition.current",
+                                "mode": "data",
+                                "type": "aws_partition",
+                                "name": "current",
+                                "provider_name": "registry.terraform.io/hashicorp/aws",
+                                "schema_version": 0,
+                                "values": {
+                                    "dns_suffix": "amazonaws.com",
+                                    "id": "aws",
+                                    "partition": "aws",
+                                    "reverse_dns_prefix": "com.amazonaws"
+                                },
+                                "sensitive_values": {}
+                            }
+                        ],
+                        "address": "module.iam_role"
+                    }
+                ]
+            }
+        }
+    },
+    "configuration": {
+        "provider_config": {
+            "aws": {
+                "name": "aws",
+                "full_name": "registry.terraform.io/hashicorp/aws"
+            }
+        },
+        "root_module": {
+            "outputs": {
+                "bucket": {
+                    "expression": {
+                        "references": [
+                            "module.my_bucket.bucket",
+                            "module.my_bucket"
+                        ]
+                    }
+                },
+                "role": {
+                    "expression": {
+                        "references": [
+                            "module.iam_role"
+                        ]
+                    }
+                }
+            },
+            "resources": [
+                {
+                    "address": "aws_iam_policy.policy",
+                    "mode": "managed",
+                    "type": "aws_iam_policy",
+                    "name": "policy",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "name": {
+                            "constant_value": "a-fancy-iam-policy"
+                        },
+                        "policy": {
+                            "references": [
+                                "data.aws_iam_policy_document.policy.json",
+                                "data.aws_iam_policy_document.policy"
+                            ]
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "data.aws_caller_identity.this",
+                    "mode": "data",
+                    "type": "aws_caller_identity",
+                    "name": "this",
+                    "provider_config_key": "aws",
+                    "schema_version": 0
+                },
+                {
+                    "address": "data.aws_iam_policy_document.policy",
+                    "mode": "data",
+                    "type": "aws_iam_policy_document",
+                    "name": "policy",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "statement": [
+                            {
+                                "actions": {
+                                    "constant_value": [
+                                        "s3:ListBucket"
+                                    ]
+                                },
+                                "effect": {
+                                    "constant_value": "Allow"
+                                },
+                                "resources": {
+                                    "references": [
+                                        "module.my_bucket.bucket.arn",
+                                        "module.my_bucket.bucket",
+                                        "module.my_bucket"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "data.aws_region.this",
+                    "mode": "data",
+                    "type": "aws_region",
+                    "name": "this",
+                    "provider_config_key": "aws",
+                    "schema_version": 0
+                }
+            ],
+            "module_calls": {
+                "iam_role": {
+                    "source": "terraform-aws-modules/iam/aws//modules/iam-assumable-role",
+                    "expressions": {
+                        "create_role": {
+                            "constant_value": true
+                        },
+                        "custom_role_policy_arns": {
+                            "references": [
+                                "aws_iam_policy.policy.arn",
+                                "aws_iam_policy.policy"
+                            ]
+                        },
+                        "number_of_custom_role_policy_arns": {
+                            "constant_value": 2
+                        },
+                        "role_name": {
+                            "constant_value": "custom"
+                        },
+                        "role_requires_mfa": {
+                            "constant_value": true
+                        },
+                        "trusted_role_arns": {
+                            "references": [
+                                "local.account_id"
+                            ]
+                        }
+                    },
+                    "module": {
+                        "outputs": {
+                            "iam_instance_profile_arn": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_instance_profile.this[0].arn",
+                                        "aws_iam_instance_profile.this[0]",
+                                        "aws_iam_instance_profile.this"
+                                    ]
+                                },
+                                "description": "ARN of IAM instance profile"
+                            },
+                            "iam_instance_profile_id": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_instance_profile.this[0].id",
+                                        "aws_iam_instance_profile.this[0]",
+                                        "aws_iam_instance_profile.this"
+                                    ]
+                                },
+                                "description": "IAM Instance profile's ID."
+                            },
+                            "iam_instance_profile_name": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_instance_profile.this[0].name",
+                                        "aws_iam_instance_profile.this[0]",
+                                        "aws_iam_instance_profile.this"
+                                    ]
+                                },
+                                "description": "Name of IAM instance profile"
+                            },
+                            "iam_instance_profile_path": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_instance_profile.this[0].path",
+                                        "aws_iam_instance_profile.this[0]",
+                                        "aws_iam_instance_profile.this"
+                                    ]
+                                },
+                                "description": "Path of IAM instance profile"
+                            },
+                            "iam_role_arn": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_role.this[0].arn",
+                                        "aws_iam_role.this[0]",
+                                        "aws_iam_role.this"
+                                    ]
+                                },
+                                "description": "ARN of IAM role"
+                            },
+                            "iam_role_name": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_role.this[0].name",
+                                        "aws_iam_role.this[0]",
+                                        "aws_iam_role.this"
+                                    ]
+                                },
+                                "description": "Name of IAM role"
+                            },
+                            "iam_role_path": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_role.this[0].path",
+                                        "aws_iam_role.this[0]",
+                                        "aws_iam_role.this"
+                                    ]
+                                },
+                                "description": "Path of IAM role"
+                            },
+                            "iam_role_unique_id": {
+                                "expression": {
+                                    "references": [
+                                        "aws_iam_role.this[0].unique_id",
+                                        "aws_iam_role.this[0]",
+                                        "aws_iam_role.this"
+                                    ]
+                                },
+                                "description": "Unique ID of IAM role"
+                            },
+                            "role_requires_mfa": {
+                                "expression": {
+                                    "references": [
+                                        "var.role_requires_mfa"
+                                    ]
+                                },
+                                "description": "Whether IAM role requires MFA"
+                            },
+                            "role_sts_externalid": {
+                                "expression": {
+                                    "references": [
+                                        "var.role_sts_externalid"
+                                    ]
+                                },
+                                "description": "STS ExternalId condition value to use with a role"
+                            }
+                        },
+                        "resources": [
+                            {
+                                "address": "aws_iam_instance_profile.this",
+                                "mode": "managed",
+                                "type": "aws_iam_instance_profile",
+                                "name": "this",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "name": {
+                                        "references": [
+                                            "var.role_name"
+                                        ]
+                                    },
+                                    "path": {
+                                        "references": [
+                                            "var.role_path"
+                                        ]
+                                    },
+                                    "role": {
+                                        "references": [
+                                            "aws_iam_role.this[0].name",
+                                            "aws_iam_role.this[0]",
+                                            "aws_iam_role.this"
+                                        ]
+                                    },
+                                    "tags": {
+                                        "references": [
+                                            "var.tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role",
+                                        "var.create_instance_profile"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "aws_iam_role.this",
+                                "mode": "managed",
+                                "type": "aws_iam_role",
+                                "name": "this",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "assume_role_policy": {
+                                        "references": [
+                                            "var.custom_role_trust_policy",
+                                            "data.aws_iam_policy_document.assume_role_with_mfa[0].json",
+                                            "data.aws_iam_policy_document.assume_role_with_mfa[0]",
+                                            "data.aws_iam_policy_document.assume_role_with_mfa",
+                                            "data.aws_iam_policy_document.assume_role[0].json",
+                                            "data.aws_iam_policy_document.assume_role[0]",
+                                            "data.aws_iam_policy_document.assume_role"
+                                        ]
+                                    },
+                                    "description": {
+                                        "references": [
+                                            "var.role_description"
+                                        ]
+                                    },
+                                    "force_detach_policies": {
+                                        "references": [
+                                            "var.force_detach_policies"
+                                        ]
+                                    },
+                                    "max_session_duration": {
+                                        "references": [
+                                            "var.max_session_duration"
+                                        ]
+                                    },
+                                    "name": {
+                                        "references": [
+                                            "var.role_name"
+                                        ]
+                                    },
+                                    "name_prefix": {
+                                        "references": [
+                                            "var.role_name_prefix"
+                                        ]
+                                    },
+                                    "path": {
+                                        "references": [
+                                            "var.role_path"
+                                        ]
+                                    },
+                                    "permissions_boundary": {
+                                        "references": [
+                                            "var.role_permissions_boundary_arn"
+                                        ]
+                                    },
+                                    "tags": {
+                                        "references": [
+                                            "var.tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "aws_iam_role_policy_attachment.admin",
+                                "mode": "managed",
+                                "type": "aws_iam_role_policy_attachment",
+                                "name": "admin",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "policy_arn": {
+                                        "references": [
+                                            "var.admin_role_policy_arn"
+                                        ]
+                                    },
+                                    "role": {
+                                        "references": [
+                                            "aws_iam_role.this[0].name",
+                                            "aws_iam_role.this[0]",
+                                            "aws_iam_role.this"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role",
+                                        "var.attach_admin_policy"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "aws_iam_role_policy_attachment.custom",
+                                "mode": "managed",
+                                "type": "aws_iam_role_policy_attachment",
+                                "name": "custom",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "policy_arn": {
+                                        "references": [
+                                            "var.custom_role_policy_arns",
+                                            "count.index"
+                                        ]
+                                    },
+                                    "role": {
+                                        "references": [
+                                            "aws_iam_role.this[0].name",
+                                            "aws_iam_role.this[0]",
+                                            "aws_iam_role.this"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role",
+                                        "var.number_of_custom_role_policy_arns",
+                                        "var.custom_role_policy_arns"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "aws_iam_role_policy_attachment.poweruser",
+                                "mode": "managed",
+                                "type": "aws_iam_role_policy_attachment",
+                                "name": "poweruser",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "policy_arn": {
+                                        "references": [
+                                            "var.poweruser_role_policy_arn"
+                                        ]
+                                    },
+                                    "role": {
+                                        "references": [
+                                            "aws_iam_role.this[0].name",
+                                            "aws_iam_role.this[0]",
+                                            "aws_iam_role.this"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role",
+                                        "var.attach_poweruser_policy"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "aws_iam_role_policy_attachment.readonly",
+                                "mode": "managed",
+                                "type": "aws_iam_role_policy_attachment",
+                                "name": "readonly",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "policy_arn": {
+                                        "references": [
+                                            "var.readonly_role_policy_arn"
+                                        ]
+                                    },
+                                    "role": {
+                                        "references": [
+                                            "aws_iam_role.this[0].name",
+                                            "aws_iam_role.this[0]",
+                                            "aws_iam_role.this"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.create_role",
+                                        "var.attach_readonly_policy"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "data.aws_caller_identity.current",
+                                "mode": "data",
+                                "type": "aws_caller_identity",
+                                "name": "current",
+                                "provider_config_key": "aws",
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "data.aws_iam_policy_document.assume_role",
+                                "mode": "data",
+                                "type": "aws_iam_policy_document",
+                                "name": "assume_role",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "statement": [
+                                        {
+                                            "actions": {
+                                                "references": [
+                                                    "var.trusted_role_actions"
+                                                ]
+                                            },
+                                            "effect": {
+                                                "constant_value": "Allow"
+                                            },
+                                            "principals": [
+                                                {
+                                                    "identifiers": {
+                                                        "references": [
+                                                            "var.trusted_role_arns"
+                                                        ]
+                                                    },
+                                                    "type": {
+                                                        "constant_value": "AWS"
+                                                    }
+                                                },
+                                                {
+                                                    "identifiers": {
+                                                        "references": [
+                                                            "var.trusted_role_services"
+                                                        ]
+                                                    },
+                                                    "type": {
+                                                        "constant_value": "Service"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.custom_role_trust_policy",
+                                        "var.role_requires_mfa"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "data.aws_iam_policy_document.assume_role_with_mfa",
+                                "mode": "data",
+                                "type": "aws_iam_policy_document",
+                                "name": "assume_role_with_mfa",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "statement": [
+                                        {
+                                            "actions": {
+                                                "references": [
+                                                    "var.trusted_role_actions"
+                                                ]
+                                            },
+                                            "condition": [
+                                                {
+                                                    "test": {
+                                                        "constant_value": "Bool"
+                                                    },
+                                                    "values": {
+                                                        "constant_value": [
+                                                            "true"
+                                                        ]
+                                                    },
+                                                    "variable": {
+                                                        "constant_value": "aws:MultiFactorAuthPresent"
+                                                    }
+                                                },
+                                                {
+                                                    "test": {
+                                                        "constant_value": "NumericLessThan"
+                                                    },
+                                                    "values": {
+                                                        "references": [
+                                                            "var.mfa_age"
+                                                        ]
+                                                    },
+                                                    "variable": {
+                                                        "constant_value": "aws:MultiFactorAuthAge"
+                                                    }
+                                                }
+                                            ],
+                                            "effect": {
+                                                "constant_value": "Allow"
+                                            },
+                                            "principals": [
+                                                {
+                                                    "identifiers": {
+                                                        "references": [
+                                                            "var.trusted_role_arns"
+                                                        ]
+                                                    },
+                                                    "type": {
+                                                        "constant_value": "AWS"
+                                                    }
+                                                },
+                                                {
+                                                    "identifiers": {
+                                                        "references": [
+                                                            "var.trusted_role_services"
+                                                        ]
+                                                    },
+                                                    "type": {
+                                                        "constant_value": "Service"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0,
+                                "count_expression": {
+                                    "references": [
+                                        "var.custom_role_trust_policy",
+                                        "var.role_requires_mfa"
+                                    ]
+                                }
+                            },
+                            {
+                                "address": "data.aws_partition.current",
+                                "mode": "data",
+                                "type": "aws_partition",
+                                "name": "current",
+                                "provider_config_key": "aws",
+                                "schema_version": 0
+                            }
+                        ],
+                        "variables": {
+                            "admin_role_policy_arn": {
+                                "default": "arn:aws:iam::aws:policy/AdministratorAccess",
+                                "description": "Policy ARN to use for admin role"
+                            },
+                            "allow_self_assume_role": {
+                                "default": false,
+                                "description": "Determines whether to allow the role to be [assume itself](https://aws.amazon.com/blogs/security/announcing-an-update-to-iam-role-trust-policy-behavior/)"
+                            },
+                            "attach_admin_policy": {
+                                "default": false,
+                                "description": "Whether to attach an admin policy to a role"
+                            },
+                            "attach_poweruser_policy": {
+                                "default": false,
+                                "description": "Whether to attach a poweruser policy to a role"
+                            },
+                            "attach_readonly_policy": {
+                                "default": false,
+                                "description": "Whether to attach a readonly policy to a role"
+                            },
+                            "create_instance_profile": {
+                                "default": false,
+                                "description": "Whether to create an instance profile"
+                            },
+                            "create_role": {
+                                "default": false,
+                                "description": "Whether to create a role"
+                            },
+                            "custom_role_policy_arns": {
+                                "default": [],
+                                "description": "List of ARNs of IAM policies to attach to IAM role"
+                            },
+                            "custom_role_trust_policy": {
+                                "default": "",
+                                "description": "A custom role trust policy"
+                            },
+                            "force_detach_policies": {
+                                "default": false,
+                                "description": "Whether policies should be detached from this role when destroying"
+                            },
+                            "max_session_duration": {
+                                "default": 3600,
+                                "description": "Maximum CLI/API session duration in seconds between 3600 and 43200"
+                            },
+                            "mfa_age": {
+                                "default": 86400,
+                                "description": "Max age of valid MFA (in seconds) for roles which require MFA"
+                            },
+                            "number_of_custom_role_policy_arns": {
+                                "default": null,
+                                "description": "Number of IAM policies to attach to IAM role"
+                            },
+                            "poweruser_role_policy_arn": {
+                                "default": "arn:aws:iam::aws:policy/PowerUserAccess",
+                                "description": "Policy ARN to use for poweruser role"
+                            },
+                            "readonly_role_policy_arn": {
+                                "default": "arn:aws:iam::aws:policy/ReadOnlyAccess",
+                                "description": "Policy ARN to use for readonly role"
+                            },
+                            "role_description": {
+                                "default": "",
+                                "description": "IAM Role description"
+                            },
+                            "role_name": {
+                                "default": null,
+                                "description": "IAM role name"
+                            },
+                            "role_name_prefix": {
+                                "default": null,
+                                "description": "IAM role name prefix"
+                            },
+                            "role_path": {
+                                "default": "/",
+                                "description": "Path of IAM role"
+                            },
+                            "role_permissions_boundary_arn": {
+                                "default": "",
+                                "description": "Permissions boundary ARN to use for IAM role"
+                            },
+                            "role_requires_mfa": {
+                                "default": true,
+                                "description": "Whether role requires MFA"
+                            },
+                            "role_sts_externalid": {
+                                "default": [],
+                                "description": "STS ExternalId condition values to use with a role (when MFA is not required)"
+                            },
+                            "tags": {
+                                "default": {},
+                                "description": "A map of tags to add to IAM role resources"
+                            },
+                            "trusted_role_actions": {
+                                "default": [
+                                    "sts:AssumeRole"
+                                ],
+                                "description": "Actions of STS"
+                            },
+                            "trusted_role_arns": {
+                                "default": [],
+                                "description": "ARNs of AWS entities who can assume these roles"
+                            },
+                            "trusted_role_services": {
+                                "default": [],
+                                "description": "AWS Services that can assume these roles"
+                            }
+                        }
+                    },
+                    "version_constraint": "~\u003e 5.0"
+                },
+                "my_bucket": {
+                    "source": "./modules/local",
+                    "expressions": {
+                        "name": {
+                            "constant_value": "a-fun-bucket"
+                        },
+                        "tags": {
+                            "references": [
+                                "local.tags"
+                            ]
+                        }
+                    },
+                    "module": {
+                        "outputs": {
+                            "bucket": {
+                                "expression": {
+                                    "references": [
+                                        "aws_s3_bucket.default"
+                                    ]
+                                }
+                            }
+                        },
+                        "resources": [
+                            {
+                                "address": "aws_s3_bucket.default",
+                                "mode": "managed",
+                                "type": "aws_s3_bucket",
+                                "name": "default",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "bucket": {
+                                        "references": [
+                                            "var.name"
+                                        ]
+                                    },
+                                    "tags": {
+                                        "references": [
+                                            "var.tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0
+                            }
+                        ],
+                        "variables": {
+                            "name": {
+                                "description": "A friendly name for this bucket"
+                            },
+                            "tags": {
+                                "description": "A map of tags to attach to this bucket"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "relevant_attributes": [
+        {
+            "resource": "aws_iam_policy.policy",
+            "attribute": [
+                "arn"
+            ]
+        },
+        {
+            "resource": "data.aws_iam_policy_document.policy",
+            "attribute": [
+                "json"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_role.this[0]",
+            "attribute": [
+                "path"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_instance_profile.this[0]",
+            "attribute": [
+                "arn"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_instance_profile.this[0]",
+            "attribute": [
+                "path"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_instance_profile.this[0]",
+            "attribute": [
+                "id"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_role.this[0]",
+            "attribute": [
+                "unique_id"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_instance_profile.this[0]",
+            "attribute": [
+                "name"
+            ]
+        },
+        {
+            "resource": "module.iam_role.data.aws_iam_policy_document.assume_role_with_mfa[0]",
+            "attribute": [
+                "json"
+            ]
+        },
+        {
+            "resource": "module.iam_role.data.aws_iam_policy_document.assume_role[0]",
+            "attribute": [
+                "json"
+            ]
+        },
+        {
+            "resource": "module.iam_role.aws_iam_role.this[0]",
+            "attribute": [
+                "name"
+            ]
+        },
+        {
+            "resource": "module.my_bucket.aws_s3_bucket.default",
+            "attribute": []
+        },
+        {
+            "resource": "module.iam_role.aws_iam_role.this[0]",
+            "attribute": [
+                "arn"
+            ]
+        }
+    ]
+}

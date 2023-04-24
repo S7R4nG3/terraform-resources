@@ -29,30 +29,33 @@ type jsonModules struct {
 // unmarshaling.
 func (p Plan) ParseModules() ([]Module, error) {
 	var path string
-	var modules jsonModules
+	var jsonModules jsonModules
 	cwd, _ := os.Getwd()
-	if p.ModulesFilePath == "" {
-		tfInitPath := filepath.Join(cwd, ".terraform")
-		defaultModulesPath := filepath.Join(cwd, ".terraform", "modules", "modules.json")
-		if !fileExists(tfInitPath) {
-			errMessage := fmt.Sprintf("Unable to locate 'modules.json' file at the default path: %s\t%s%sPlease ensure that you ahve Terraofrm initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), tfInitPath, newline())
-			err := errors.New(errMessage)
-			return modules.Modules, err
-		} else {
-			path = defaultModulesPath
-		}
-	} else {
+	// Check the supplied ModulesFilePath
+	if p.ModulesFilePath != "" && fileExists(p.ModulesFilePath) {
 		path = p.ModulesFilePath
+		// If not supplied but it doesn't exist - return a more meaningful error
+	} else if p.ModulesFilePath != "" && !fileExists(p.ModulesFilePath) {
+		errMessage := fmt.Sprintf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
+		err := errors.New(errMessage)
+		return []Module{}, err
+		// Else check for the default path and if it doesn't exist return early - no modules declared
+	} else if p.ModulesFilePath == "" {
+		tfDefaultModulesPath := filepath.Join(cwd, ".terraform", "modules", "modules.json")
+		if !fileExists(tfDefaultModulesPath) {
+			return []Module{}, nil
+		}
+		path = tfDefaultModulesPath
 	}
 	modulesFile, err := os.ReadFile(path)
 	if err != nil {
 		er := errors.Join(fmt.Errorf("error reading contents of %s", path), err)
-		return modules.Modules, er
+		return jsonModules.Modules, er
 	}
-	err = json.Unmarshal(modulesFile, &modules)
+	err = json.Unmarshal(modulesFile, &jsonModules)
 	if err != nil {
 		er := errors.Join(fmt.Errorf("error unmarshalling json contents of %s", path), err)
-		return modules.Modules, er
+		return jsonModules.Modules, er
 	}
-	return modules.Modules, nil
+	return jsonModules.Modules, nil
 }

@@ -1,14 +1,5 @@
-module "naming" {
-    source = "./modules/naming"
-    app_name = "example"
-    microservice = "tester"
-    tags = {
-        Tag = "value"
-    }
-}
-
 resource "aws_s3_bucket" "default" {
-    bucket = "${module.naming.full_name}-test"
+    bucket = "my-test-bucket"
 }
 
 resource "aws_s3_object" "obj" {
