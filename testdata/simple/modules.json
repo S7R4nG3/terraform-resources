@@ -1,0 +1,14 @@
+{
+    "Modules": [
+        {
+            "Key": "",
+            "Source": "",
+            "Dir": "."
+        },
+        {
+            "Key": "naming",
+            "Source": "./modules/naming",
+            "Dir": "modules/naming"
+        }
+    ]
+}

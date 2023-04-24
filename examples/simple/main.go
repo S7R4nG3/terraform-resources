@@ -8,10 +8,11 @@ import (
 func main() {
 	plan := tfresources.Plan{
 		PlanFile:        "../../testdata/simple/plan.json",
-		ModulesFilePath: "../../testdata/simple/.terraform/modules/modules.json",
+		ModulesFilePath: "../../testdata/simple/modules.json",
 	}
 	plan.GetResources()
-	for resource := range plan.Resources {
-		fmt.Println(resource)
+	for _, resource := range plan.Resources {
+		fmt.Println(resource.Module)
+		fmt.Println(resource.Planned.Address)
 	}
 }

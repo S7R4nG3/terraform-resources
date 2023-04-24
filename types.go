@@ -17,31 +17,30 @@ import tfjson "github.com/hashicorp/terraform-json"
 // PlanFile so that it's GetResources() method can then
 // be called to evaluate the resources in that plan.
 //
-// 		plan := tfresources.Plan{
-//			PlanFile: "./tfplan.json"
-// 		}
-//		plan.GetResources()
-//		for resource := range plan.Resources {
-//			... Do things here ...
-//      }
+//			plan := tfresources.Plan{
+//				PlanFile: "./tfplan.json"
+//			}
+//			plan.GetResources()
+//			for resource := range plan.Resources {
+//				... Do things here ...
+//	     }
 //
 // Multiple Plans can be declared at the same time to evaluate
 // the resources from multiple Terraform executions simultaneously.
 //
-//		var allResources []tfresources.Resource
-//		firstPlan := tfresources.Plan{
-//			PlanFile: "./tfplan1.json"
-//		}
-//		secondPlan := tfresources.Plan{
-//			PlanFile: "./tfplan2.json"
-//		}
-// 		firstPlan.GetResources()
-//		secondPlan.GetResources()
-//		allResources = firstPlan.Resources + secondPlan.Resources
-//		for resource := range allResources {
-//			... Do things here ...
-//		}
-//
+//	var allResources []tfresources.Resource
+//	firstPlan := tfresources.Plan{
+//		PlanFile: "./tfplan1.json"
+//	}
+//	secondPlan := tfresources.Plan{
+//		PlanFile: "./tfplan2.json"
+//	}
+//	firstPlan.GetResources()
+//	secondPlan.GetResources()
+//	allResources = firstPlan.Resources + secondPlan.Resources
+//	for resource := range allResources {
+//		... Do things here ...
+//	}
 type Plan struct {
 
 	// PlanFile is the primary entrypoint that is used to specify
@@ -82,17 +81,17 @@ type Resource struct {
 	// back to its parent module address (if available).
 	Module Module
 
-	// Value stores the unmarshalled contents of a Terraform resource
+	// Planned stores the unmarshalled contents of a Terraform resource
 	// provided from the terraform-json project.
-	// The attributes of Value provide all the details that Terraform was
+	// The values of Planned provide all the details that Terraform was
 	// able to infer about the creation of a resource from the provided
 	// Terraform plan file.
-	// It is important to note that not all attributes in a Value will have
+	// It is important to note that not all values in Planned will have
 	// a meaningful result, as Terraform is only able to infer the value of
 	// some resource attributes during a Terraform `apply` execution.
 	//
 	// [terraform-json]: https://github.com/hashicorp/terraform-json
-	Value tfjson.StateResource
+	Planned tfjson.StateResource
 }
 
 // A Module is a container to hold the parsed contents of a

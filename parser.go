@@ -1,5 +1,9 @@
 package tfresources
 
+import (
+	"log"
+)
+
 // GetResources is the primary method used to orchestrate the
 // parsing of both the user supplied Terraform plan file, as
 // well as the optional terraform 'modules.json' file.
@@ -17,19 +21,25 @@ package tfresources
 //
 // Once we have both the resources and the modules, we finally link
 // the resources toegether.
-func (p Plan) GetResources() {
-	/*
-		calls ParsePlan
-			unmarshals plan JSON to planFileContent
-			dig through planFileContent object to create Resource
-			append Resource to Plan.Resources
-
-		calls ParseModules
-			unmarshals modules JSON to modulesFileContent
-			dig through modulesFileContent
-				loop through modules and update Plan.Resources.<idx> with module data to Plan.Resources.<idx>.Module
-
-		calls linkResources
-			walk through TF resources and link them to parent and child modules
-	*/
+func (p *Plan) GetResources() {
+	// modules, err := p.ParseModules()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for _, module := range modules {
+	// 	res := Resource{
+	// 		Module: module,
+	// 	}
+	// 	p.Resources = append(p.Resources, res)
+	// }
+	resources, err := p.ParsePlan()
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, resource := range resources {
+		res := Resource{
+			Planned: resource,
+		}
+		p.Resources = append(p.Resources, res)
+	}
 }
