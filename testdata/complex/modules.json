@@ -1,0 +1,20 @@
+{
+    "Modules": [
+        {
+            "Key": "",
+            "Source": "",
+            "Dir": "."
+        },
+        {
+            "Key": "iam_role",
+            "Source": "registry.terraform.io/terraform-aws-modules/iam/aws//modules/iam-assumable-role",
+            "Version": "5.17.0",
+            "Dir": ".terraform/modules/iam_role/modules/iam-assumable-role"
+        },
+        {
+            "Key": "my_bucket",
+            "Source": "./modules/local",
+            "Dir": "modules/local"
+        }
+    ]
+}
