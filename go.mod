@@ -1,4 +1,4 @@
-module tf-resources
+module github.com/S7R4nG3/terraform-resources
 
 go 1.20
 

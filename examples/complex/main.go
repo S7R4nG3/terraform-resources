@@ -5,7 +5,8 @@ import (
 	"log"
 	"runtime"
 	"strings"
-	tfresources "tf-resources"
+
+	tfresources "github.com/S7R4nG3/terraform-resources"
 )
 
 func main() {
