@@ -19,7 +19,7 @@ func main() {
 
 func newline() string {
 	if runtime.GOOS == "windows" {
-		return "\r\n"
+		return "\r\n" // barf...
 	}
 	return "\n"
 }
