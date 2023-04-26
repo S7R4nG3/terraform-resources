@@ -46,6 +46,7 @@ jobs:
   package:
     name: Update Golang package
     runs-on: ubuntu-latest
+    needs: release
     steps:  
       - uses: actions/setup-go@v4
         with:
@@ -55,4 +56,5 @@ jobs:
         run: |
           echo -e "package main\n\nfunc main(){}" > main.go
           go mod init junk
-          GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/S7R4nG3/terraform-resources@${{ github.ref }}
+          go mod tidy
+          GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/S7R4nG3/terraform-resources@${{ github.ref_name }}
