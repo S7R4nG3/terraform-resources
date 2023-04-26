@@ -14,7 +14,7 @@ Instead of dicatating a particular configuration language to evaluate your Terra
 package main
 
 import (
-    "fmt"
+	"fmt"
     "log"
     "strings"
 
