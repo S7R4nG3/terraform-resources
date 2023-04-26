@@ -54,4 +54,5 @@ jobs:
       - name: Pull latest version from proxy
         run: |
           echo -e "package main\n\nfunc main(){}" > main.go
+          go mod init junk
           GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/S7R4nG3/terraform-resources@${{ github.ref }}
