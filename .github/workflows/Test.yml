@@ -19,3 +19,11 @@ jobs:
         run: |
           go install .
           go test -v .
+
+      - name: example builds
+        run: | 
+          go install .
+          cd ./examples/simple
+          go run .
+          cd ../examples/complex
+          go run .
