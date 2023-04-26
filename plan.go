@@ -13,10 +13,16 @@ import (
 // exists. If we're unable to stat the file, then we fail early with
 // a helpful error message.
 //
-// Once we've located the file, we unmarshal its contents leveraging
-// the [terraform-json] project to write its contents to a slice
-// tfjson StateResource local variable that is eventually returned
-// unless there is an issue unmarshaling it's contents.
+// Once we've located the file, we ingest the contents and collect
+// the root module contents (any raw terraform resources) declared
+// in the plan. We then start collecting the child module contents,
+// which include any resources that will be created as a result of
+// declaring a `module` block.
+//
+// All of these resource contents are returned and used for linking
+// later. If there is some problem with the linking process, this
+// method can be called directly for a simple slice of raw tfjson
+// StateResources for the deployment.
 //
 // [terraform-json]: https://github.com/hashicorp/terraform-json
 func (p Plan) ParsePlan() ([]tfjson.StateResource, error) {

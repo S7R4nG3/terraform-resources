@@ -3,8 +3,8 @@
 // parent module that can be then used in further applications for
 // security scanning.
 //
-// By default only the plan file path is required, but users
-// additionally have the ability to specify their own modules.json
-// file if Terraform has been initialized in a different directory
-// or CI stage.
+// These resources can be used to drive your own compliance rules
+// according to what you and your organization may need with the
+// flexibility of the entire Golang programming language at your
+// fingertips.
 package tfresources
