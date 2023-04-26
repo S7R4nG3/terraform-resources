@@ -1,7 +1,7 @@
 ![License: GPL v3](https://img.shields.io/badge/License-GPL_v3-blue.svg)
 ![latest build](https://github.com/S7R4nG3/terraform-resources/actions/workflows/Test.yml/badge.svg)
 ![latest release](https://img.shields.io/github/release-date/S7R4nG3/terraform-resources)
-
+[![Go Reference](https://pkg.go.dev/badge/github.com/S7R4nG3/terraform-resources.svg)](https://pkg.go.dev/github.com/S7R4nG3/terraform-resources)
 # terraform-resources
 
 A package to identify and parse through all resources in a known Terraform plan.
@@ -11,6 +11,15 @@ Instead of dicatating a particular configuration language to evaluate your Terra
 ## Usage
 
 ```golang
+package main
+
+import (
+	"fmt"
+    "log"
+    "strings"
+
+	tfresources "github.com/S7R4nG3/terraform-resources"
+)
 func main() {
     // Currently requires that your plan file be exported in json format.
     // This can be accomplished using the following terraform commands:
@@ -31,7 +40,6 @@ func main() {
     }
     fmt.Println("DONE!")
 }
-
 ```
 
 ## Authors

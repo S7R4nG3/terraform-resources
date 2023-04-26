@@ -9,7 +9,7 @@ import (
 
 func main() {
 	plan := tfresources.Plan{
-		PlanFile: "./testdata/simple/plan.json",
+		PlanFile: "../../testdata/simple/plan.json",
 	}
 	plan.GetResources()
 	for _, resource := range plan.Resources {

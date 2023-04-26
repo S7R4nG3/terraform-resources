@@ -1,6 +1,7 @@
 package tfresources
 
 import (
+	"fmt"
 	"strings"
 
 	tfjson "github.com/hashicorp/terraform-json"
@@ -31,7 +32,7 @@ func parseModuleFromResourceAddress(resource tfjson.StateResource, modules []Mod
 			`\.module\.`, // Remove any intermediate ".module." refs <friendly name>.module.<resource>
 			`\[\d+\]`,    // Remove any list indexed refs <resource>[0].<friendly name>
 			`\[\".+\"\]`, // Remove any refs to map keys <resource>.<friendly name>[\"name\"]
-			"." + resource.Type + "." + resource.Name, // Finally trim off the resource type and friendly name refs <friendly name>.aws_s3_bucket.default
+			fmt.Sprintf(`\.%s\.%s`, resource.Type, resource.Name), // Finally trim off the resource type and friendly name refs <friendly name>.aws_s3_bucket.default
 		}
 		key := removeString(regexes, resource.Address)
 		for idx := range modules {

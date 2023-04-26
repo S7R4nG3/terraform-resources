@@ -2,34 +2,32 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"runtime"
-	"strings"
+	"sync"
 
 	tfresources "github.com/S7R4nG3/terraform-resources"
 )
 
+var results = []string{}
+
 func main() {
 	plan := tfresources.Plan{
-		PlanFile:        "./testdata/complex/plan.json",
-		ModulesFilePath: "./testdata/complex/modules.json",
+		PlanFile:        "../../testdata/complex/plan.json",
+		ModulesFilePath: "../../testdata/complex/modules.json",
 	}
 	plan.GetResources()
-	for _, resource := range plan.Resources {
-		if strings.Contains(resource.Planned.ProviderName, "hashicorp/aws") && resource.Planned.Mode != "data" {
-			if resource.Planned.Type == "aws_s3_bucket" {
-				if _, exists := resource.Planned.AttributeValues["tags"]; !exists {
-					log.Fatalf("S3 buckets must include tags!!%s\t%s", newline(), resource.Planned.AttributeValues)
-				}
-			}
-		}
+	buffer := len(plan.Resources)
+	wg := new(sync.WaitGroup)
+	i := make(chan tfresources.Resource, buffer)
+	rules := []asyncWorker{
+		resourcesMustBeTagged,
+		resourcesCannotUsePublicRegistryModules,
 	}
-	fmt.Println("DONE!")
-}
 
-func newline() string {
-	if runtime.GOOS == "windows" {
-		return "\r\n" // barf...
+	loader(plan.Resources, i, wg)
+	ruleEngine(rules, i, wg, buffer)
+	wg.Wait()
+
+	for _, res := range results {
+		fmt.Println(res)
 	}
-	return "\n"
 }
