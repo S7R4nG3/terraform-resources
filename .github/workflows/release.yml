@@ -20,8 +20,10 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          go install .
+          go install github.com/S7R4nG3/terraform-resources@${{ github.ref }}
           go test -v .
+          cd ./examples/simple && go run .
+          cd ../complex && go run .
 
       - name: Create Release
         id: create_release
