@@ -21,7 +21,7 @@ import tfjson "github.com/hashicorp/terraform-json"
 //				PlanFile: "./tfplan.json"
 //			}
 //			plan.GetResources()
-//			for resource := range plan.Resources {
+//			for _, resource := range plan.Resources {
 //				... Do things here ...
 //	     }
 //
@@ -32,15 +32,19 @@ import tfjson "github.com/hashicorp/terraform-json"
 //	firstPlan := tfresources.Plan{
 //		PlanFile: "./tfplan1.json"
 //	}
+//	firstPlan.GetResources()
+//
 //	secondPlan := tfresources.Plan{
 //		PlanFile: "./tfplan2.json"
 //	}
-//	firstPlan.GetResources()
 //	secondPlan.GetResources()
-//	allResources = firstPlan.Resources + secondPlan.Resources
-//	for resource := range allResources {
+//
+//	allResources = append(firstPlan.Resources, secondPlan.Resources)
+//	for _, resource := range allResources {
 //		... Do things here ...
 //	}
+//
+// See the simple and complex examples for more detailed use cases.//
 type Plan struct {
 
 	// PlanFile is the primary entrypoint that is used to specify
@@ -59,11 +63,13 @@ type Plan struct {
 	// ModulesFilePath is an optional entrypoint parameter that can be
 	// used to specify a custom modules.json file containing all the
 	// modules that are being used for a particular Terraform plan.
+	//
 	// If not specified, the current program will default to Terraform's
 	// default file path of `.terraform/modules/modules.json`.
+	//
 	// If unable to locate a modules file at the default path, it will
-	// assume the deployment has no declared modules and list only the
-	// resources.
+	// assume the deployment has no declared modules and will provide
+	// the resources with a nil module value.
 	ModulesFilePath string
 
 	// A Resource container used to contain the results of parsing the
@@ -76,9 +82,11 @@ type Plan struct {
 // about the resource from the provided Terraform plan.
 // These attributes are provided from Hashi's own
 // [terraform-json] project.
+//
 // Additionally a Resource creates a default container that
 // is used to hold the relevant information about the Terraform
 // resource's parent Module (if available).
+//
 // This linkage allows users to scan a resource's configuration
 // and link this configuration back to a specific module source
 // (if available).
@@ -90,10 +98,12 @@ type Resource struct {
 	Module Module
 
 	// Planned stores the unmarshalled contents of a Terraform resource
-	// provided from the terraform-json project.
+	// provided from the [terraform-json] project.
+	//
 	// The values of Planned provide all the details that Terraform was
 	// able to infer about the creation of a resource from the provided
 	// Terraform plan file.
+	//
 	// It is important to note that not all values in Planned will have
 	// a meaningful result, as Terraform is only able to infer the value of
 	// some resource attributes during a Terraform `apply` execution.
@@ -104,20 +114,26 @@ type Resource struct {
 
 // A Module is a container to hold the parsed contents of a
 // Terraform `modules.json` file.
+//
 // During the execution of a Terraform `init`, Terraform will
 // read the contents of the Terraform files in the current
 // directory and assemble this `modules.json` file so that it
 // is able to track what module source URLs and versions are to
-// be downloaded and used with the deploy.
+// be downloaded and used with which declarations (organized by
+// key).
 //
 // Once assembled, the Terraform `init` command uses this file to
 // download each module and store them locally under the `.terraform/modules`
 // folder in the execution directory.
+//
+// If no modules are used for the deployment (i.e. a deployment using
+// only raw Terraform resources) this file is not generated.
 type Module struct {
 	// Source identifies the module's source directory or download URL.
 	// This value can be a local filesystem path, or a remote download
 	// URL depending on where a user is sourcing their module contents
 	// from.
+	//
 	// By default, all Terraform deployments include a module definition
 	// with a source of "." (indicating the current directory).
 	Source string `json:"Source"`
@@ -125,6 +141,7 @@ type Module struct {
 	// Version identifies the module's designated version. This value is only
 	// provided if the end user is referencing a Terraform module from a configured
 	// [Terraform Module Registry].
+	//
 	// If sourcing module content from a Git URL, the version will be included as a
 	// `&ref=` parameter at the end of the source URL.
 	//
@@ -137,6 +154,6 @@ type Module struct {
 
 	// Key identifies the full address of the Terraform resource that is to
 	// be created. This value is used to uniquely identify separate resources
-	// that may be using the same module code.
+	// that may be created under a single module.
 	Key string `json:"Key"`
 }

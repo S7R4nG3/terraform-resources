@@ -27,6 +27,9 @@ type jsonModules struct {
 // Once we've located the file, we unmarshal its contents into a local slice
 // Module variable that is eventually returned unless there is an error during
 // unmarshaling.
+//
+// If there is an error with resource linking, this method can be called directly
+// to return a simple list of all declared modules and their requisite information.
 func (p Plan) ParseModules() ([]Module, error) {
 	var path string
 	var jsonModules jsonModules

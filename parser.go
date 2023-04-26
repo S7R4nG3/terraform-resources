@@ -20,7 +20,9 @@ import (
 // plan does not necessarily scale linearly with the number of modules.
 //
 // Once we have both the resources and the modules, we finally link
-// the resources toegether.
+// the resources toegether and return them as a slice of interlinked
+// tjson StateResources with their associated module Address, Key,
+// Source, and Dir attributes.
 func (p *Plan) GetResources() {
 	modules, err := p.ParseModules()
 	if err != nil {
