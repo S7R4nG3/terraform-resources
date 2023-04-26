@@ -12,8 +12,7 @@ func (p *Plan) linkResourcesWithModules(planModules []Module, planResources []tf
 		module := parseModuleFromResourceAddress(resource, planModules)
 		parent := parseParentFromChildModule(module, planModules)
 		if parent != (Module{}) {
-			// This module has a parent - link it
-			module = parent
+			module = parent // This module has a parent - link it
 		}
 		this := Resource{
 			Module:  module,

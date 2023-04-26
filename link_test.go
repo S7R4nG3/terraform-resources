@@ -7,6 +7,83 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
+func TestLinkResourcesWithModules(t *testing.T) {
+	tests := []struct {
+		name      string
+		modules   []Module
+		resources []tfjson.StateResource
+		want      []Resource
+	}{
+		{
+			name: "Resources should link to modules properly",
+			modules: []Module{
+				{
+					Key:     "function",
+					Source:  "some.registry.source",
+					Dir:     "a/magic/dir",
+					Version: "0.0.0",
+				},
+			},
+			resources: []tfjson.StateResource{
+				{
+					Address: "module.function.aws_lambda_function.default",
+					Type:    "aws_lambda_function",
+					Name:    "default",
+				},
+			},
+			want: []Resource{
+				{
+					Module: Module{
+						Key:     "function",
+						Source:  "some.registry.source",
+						Dir:     "a/magic/dir",
+						Version: "0.0.0",
+					},
+					Planned: tfjson.StateResource{
+						Address: "module.function.aws_lambda_function.default",
+						Type:    "aws_lambda_function",
+						Name:    "default",
+					},
+				},
+			},
+		},
+		{
+			name: "Resources should not link to modules properly",
+			modules: []Module{
+				{
+					Key:     "function",
+					Source:  "another.registry.surce",
+					Dir:     "a/magic/dir",
+					Version: "1.1.1",
+				},
+			},
+			resources: []tfjson.StateResource{
+				{
+					Address: "aws_lambda_function.worker",
+				},
+			},
+			want: []Resource{
+				{
+					Module: Module{},
+					Planned: tfjson.StateResource{
+						Address: "aws_lambda_function.worker",
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Logf("Running test - %s", tt.name)
+		plan := Plan{}
+		plan.linkResourcesWithModules(tt.modules, tt.resources)
+		diff := deep.Equal(plan.Resources, tt.want)
+		if diff != nil {
+			t.Fatal(testResults(tt.name, diff))
+		}
+	}
+}
+
 func TestParseModuleFromResourceAddress(t *testing.T) {
 	tests := []struct {
 		name     string

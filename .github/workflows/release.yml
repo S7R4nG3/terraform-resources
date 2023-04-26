@@ -22,6 +22,8 @@ jobs:
         run: |
           go install .
           go test -v .
+          cd ./examples/simple && go run .
+          cd ../complex && go run .
 
       - name: Create Release
         id: create_release
@@ -40,3 +42,16 @@ jobs:
             INTERNALS:
           draft: false
           prerelease: false
+  
+  package:
+    name: Update Golang package
+    runs-on: ubuntu-latest
+    steps:  
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+          check-latest: true
+      - name: Pull latest version from proxy
+        run: |
+          echo -e "package main\n\nfunc main(){}" > main.go
+          GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/S7R4nG3/terraform-resources@${{ github.ref }}
