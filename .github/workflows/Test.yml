@@ -22,6 +22,6 @@ jobs:
 
       - name: example builds
         run: | 
-          GOPROXY=https://proxy.golang.org GO111MODULE=on go install github.com/S7R4nG3/terraform-resources@${{ github.ref }}
+          go install .
           cd ./examples/simple && go run .
           cd ../complex && go run .
