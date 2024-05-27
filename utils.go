@@ -45,3 +45,9 @@ func testResults(name string, diffs []string) string {
 	r := strings.Join(s, newline())
 	return r
 }
+
+func (p *Plan) debugLogger(msg string) {
+	if p.Debug {
+		p.Logger.Info(msg)
+	}
+}

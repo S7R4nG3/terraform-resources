@@ -1,7 +1,7 @@
 package tfresources
 
 import (
-	"log"
+	"github.com/sirupsen/logrus"
 )
 
 // GetResources is the primary method used to orchestrate the
@@ -24,13 +24,17 @@ import (
 // tjson StateResources with their associated module Address, Key,
 // Source, and Dir attributes.
 func (p *Plan) GetResources() {
-	modules, err := p.ParseModules()
+	p.Logger = logrus.New()
+	p.debugLogger("Starting resource aggregation...")
+
+	modules, err := p.parseModules()
 	if err != nil {
-		log.Fatal(err)
+		p.Logger.Error(err)
 	}
-	resources, err := p.ParsePlan()
+	resources, err := p.parsePlan()
 	if err != nil {
-		log.Fatal(err)
+		p.Logger.Error(err)
 	}
 	p.linkResourcesWithModules(modules, resources)
+	p.debugLogger("Resource aggregation complete.")
 }

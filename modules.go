@@ -30,26 +30,31 @@ type jsonModules struct {
 //
 // If there is an error with resource linking, this method can be called directly
 // to return a simple list of all declared modules and their requisite information.
-func (p Plan) ParseModules() ([]Module, error) {
+func (p Plan) parseModules() ([]Module, error) {
+	p.debugLogger("Begin parsing modules...")
 	var path string
 	var jsonModules jsonModules
 	cwd, _ := os.Getwd()
 	// Check the supplied ModulesFilePath
 	if p.ModulesFilePath != "" && fileExists(p.ModulesFilePath) {
+		p.debugLogger(fmt.Sprintf("Utilizing modules.json file at provided path of %v", p.ModulesFilePath))
 		path = p.ModulesFilePath
-		// If not supplied but it doesn't exist - return a more meaningful error
+		// If supplied but it doesn't exist - return a more meaningful error
 	} else if p.ModulesFilePath != "" && !fileExists(p.ModulesFilePath) {
-		// errMessage := fmt.Sprintf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
-		// err := errors.New(errMessage)
-		return []Module{}, fmt.Errorf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
+		p.debugLogger(fmt.Sprintf("Provided ModulesFilePath of %s does not exist", p.ModulesFilePath))
+		return []Module{}, fmt.Errorf("unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you have Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), p.ModulesFilePath, newline())
 		// Else check for the default path and if it doesn't exist return early - no modules declared
 	} else if p.ModulesFilePath == "" {
 		tfDefaultModulesPath := filepath.Join(cwd, ".terraform", "modules", "modules.json")
+		p.debugLogger(fmt.Sprintf("No ModulesFilePath provided, checking default path of %v", tfDefaultModulesPath))
 		if !fileExists(tfDefaultModulesPath) {
+			p.debugLogger(fmt.Sprintf("No modules.json file located at default path of %v", tfDefaultModulesPath))
 			return []Module{}, nil
 		}
+		p.debugLogger(fmt.Sprintf("Using modules.json file at default path of %v", tfDefaultModulesPath))
 		path = tfDefaultModulesPath
 	}
+	p.debugLogger("Reading modules.json file contents...")
 	modulesFile, err := os.ReadFile(path)
 	if err != nil {
 		er := errors.Join(fmt.Errorf("error reading contents of %s", path), err)
@@ -60,5 +65,6 @@ func (p Plan) ParseModules() ([]Module, error) {
 		er := errors.Join(fmt.Errorf("error unmarshalling json contents of %s", path), err)
 		return jsonModules.Modules, er
 	}
+	p.debugLogger("Finished parsing modules.")
 	return jsonModules.Modules, nil
 }
