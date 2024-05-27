@@ -1,6 +1,9 @@
 package tfresources
 
-import tfjson "github.com/hashicorp/terraform-json"
+import (
+	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/sirupsen/logrus"
+)
 
 // A Plan initializes a primary configuration container
 // that is used to specify the Terraform planfile as well
@@ -75,6 +78,13 @@ type Plan struct {
 	// A Resource container used to contain the results of parsing the
 	// specified Terraform Plan.
 	Resources []Resource
+
+	// A Debug flag used to toggle stdout debug logging for the package.
+	Debug bool
+
+	// A Logger instantiation used for debug logging when toggled using
+	// the above Debug flag.
+	Logger *logrus.Logger
 }
 
 // A Resource instantiates a new Terraform resource object

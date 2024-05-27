@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-test/deep"
 	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/sirupsen/logrus"
 )
 
 type wantPlanParsing struct {
@@ -105,8 +106,10 @@ func TestPlanParsing(t *testing.T) {
 		t.Logf("Running test -- %s", tt.name)
 		plan := Plan{
 			PlanFile: tt.planfile,
+			Debug:    true,
+			Logger:   logrus.New(),
 		}
-		gotResources, gotErr := plan.ParsePlan()
+		gotResources, gotErr := plan.parsePlan()
 		resDiff := deep.Equal(gotResources, tt.want.resources)
 		errDiff := deep.Equal(gotErr, tt.want.err)
 		if tt.want.err != nil && errDiff != nil {

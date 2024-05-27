@@ -25,9 +25,10 @@ import (
 // StateResources for the deployment.
 //
 // [terraform-json]: https://github.com/hashicorp/terraform-json
-func (p Plan) ParsePlan() ([]tfjson.StateResource, error) {
+func (p *Plan) parsePlan() ([]tfjson.StateResource, error) {
 	var planContent tfjson.Plan
 	var resources []tfjson.StateResource
+	p.debugLogger("Begin parsing Plan file...")
 	if !fileExists(p.PlanFile) {
 		err := fmt.Errorf("unable to locate plan file at path %s", p.PlanFile)
 		return resources, err
@@ -45,24 +46,33 @@ func (p Plan) ParsePlan() ([]tfjson.StateResource, error) {
 
 	rootModule := planContent.PlannedValues.RootModule
 	children := planContent.PlannedValues.RootModule.ChildModules
-	parseRootModuleResources(rootModule, &resources)
-	parseChildModuleResources(children, &resources)
+	p.parseRootModuleResources(rootModule, &resources)
+	p.parseChildModuleResources(children, &resources)
+	p.debugLogger("Finished parsing Plan file.")
 	return resources, nil
 }
 
-func parseRootModuleResources(root *tfjson.StateModule, resources *[]tfjson.StateResource) {
+func (p *Plan) parseRootModuleResources(root *tfjson.StateModule, resources *[]tfjson.StateResource) {
+	p.debugLogger("Begin parsing root module resources...")
 	for _, resource := range root.Resources {
+		p.debugLogger(fmt.Sprintf("Appending resource %v to root resources", resource.Address))
 		*resources = append(*resources, *resource)
 	}
+	p.debugLogger("Finished parsing root module resources.")
 }
 
-func parseChildModuleResources(children []*tfjson.StateModule, resources *[]tfjson.StateResource) {
+func (p *Plan) parseChildModuleResources(children []*tfjson.StateModule, resources *[]tfjson.StateResource) {
+	p.debugLogger("Begin parsing child module resources...")
 	for _, child := range children {
+		p.debugLogger(fmt.Sprintf("Evaluating child module -- %v --", child.Address))
 		for _, res := range child.Resources {
+			p.debugLogger(fmt.Sprintf("Appending child resource -- %v -- to parent -- %v --.", res.Address, child.Address))
 			*resources = append(*resources, *res)
 		}
 		if child.ChildModules != nil {
-			parseChildModuleResources(child.ChildModules, resources)
+			p.debugLogger("Identified further child module, digging further into tree...")
+			p.parseChildModuleResources(child.ChildModules, resources)
 		}
 	}
+	p.debugLogger("Finished parsing child module resources.")
 }

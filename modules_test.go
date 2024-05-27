@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
+	"github.com/sirupsen/logrus"
 )
 
 type wantParseModules struct {
@@ -31,7 +32,7 @@ func TestParseModules(t *testing.T) {
 			modulespath: "./nonexistant",
 			want: wantParseModules{
 				modules: []Module{},
-				err:     fmt.Errorf("Unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you ahve Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), "./nonexistant", newline()),
+				err:     fmt.Errorf("unable to locate 'modules.json' file at the specified path: %s\t%s%sPlease ensure that you have Terraform initialized in the current directory, or you have specified a custom 'modules.json' path via tfresources.Plan{}", newline(), "./nonexistant", newline()),
 			},
 		},
 		{
@@ -66,8 +67,10 @@ func TestParseModules(t *testing.T) {
 		t.Logf("Running test -- %s", tt.name)
 		plan := Plan{
 			ModulesFilePath: tt.modulespath,
+			Debug:           true,
+			Logger:          logrus.New(),
 		}
-		gotModules, gotErr := plan.ParseModules()
+		gotModules, gotErr := plan.parseModules()
 		modDiff := deep.Equal(gotModules, tt.want.modules)
 		errDiff := deep.Equal(gotErr, tt.want.err)
 		if tt.want.err != nil && errDiff != nil {
