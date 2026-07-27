@@ -147,7 +147,7 @@ func TestParseModuleFromResourceAddress(t *testing.T) {
 		got := parseModuleFromResourceAddress(tt.resource, tt.modules)
 		diff := deep.Equal(got, tt.want)
 		if diff != nil {
-			t.Fatalf(testResults(tt.name, diff))
+			t.Fatalf("%s", testResults(tt.name, diff))
 		}
 	}
 }

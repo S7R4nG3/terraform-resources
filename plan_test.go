@@ -116,7 +116,7 @@ func TestPlanParsing(t *testing.T) {
 			t.Fatalf("BAD")
 		}
 		if tt.want.err == nil && resDiff != nil {
-			t.Fatalf(testResults(tt.name, resDiff))
+			t.Fatalf("%s", testResults(tt.name, resDiff))
 		}
 	}
 }
