@@ -69,12 +69,12 @@ jobs:
           # Warm the module proxy; retry since it may lag behind the tag push.
           for attempt in 1 2 3 4 5; do
             if GOPROXY=https://proxy.golang.org,direct GO111MODULE=on \
-                 go get "github.com/S7R4nG3/tf-guard@${VERSION}"; then
-              echo "Fetched github.com/S7R4nG3/tf-guard@${VERSION}"
+                 go get "github.com/S7R4nG3/terraform-resources@${VERSION}"; then
+              echo "Fetched github.com/S7R4nG3/terraform-resources@${VERSION}"
               exit 0
             fi
             echo "Attempt ${attempt} failed; proxy may not have indexed ${VERSION} yet. Retrying..."
             sleep 15
           done
-          echo "::error::Could not fetch github.com/S7R4nG3/tf-guard@${VERSION} after retries"
+          echo "::error::Could not fetch github.com/S7R4nG3/terraform-resources@${VERSION} after retries"
           exit 1
