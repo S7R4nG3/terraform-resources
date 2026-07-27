@@ -5,7 +5,10 @@ on:
     tags:
       - 'v*'
 
-jobs:  
+permissions:
+  contents: write
+
+jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version: '1.26'
           check-latest: true
 
       - name: Run Unit Tests
@@ -26,15 +29,12 @@ jobs:
           cd ../complex && go run .
 
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
-            Latest Release for terraform-resources:
+            Latest Release for tf-guard:
             NOTES:
 
             ENHANCEMENTS:
@@ -42,19 +42,39 @@ jobs:
             INTERNALS:
           draft: false
           prerelease: false
-  
+
   package:
     name: Update Golang package
     runs-on: ubuntu-latest
     needs: release
-    steps:  
+    steps:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.26'
           check-latest: true
       - name: Pull latest version from proxy
+        env:
+          VERSION: ${{ github.ref_name }}
         run: |
+          # Guard against a malformed tag/version reaching the proxy
+          # (the proxy 400s on any char it can't escape, e.g. ':').
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+].*)?$ ]]; then
+            echo "::error::Refusing to fetch invalid module version: '$VERSION'"
+            exit 1
+          fi
+
           echo -e "package main\n\nfunc main(){}" > main.go
           go mod init junk
-          go mod tidy
-          GOPROXY=https://proxy.golang.org GO111MODULE=on go get github.com/S7R4nG3/terraform-resources@${{ github.ref_name }}
+
+          # Warm the module proxy; retry since it may lag behind the tag push.
+          for attempt in 1 2 3 4 5; do
+            if GOPROXY=https://proxy.golang.org,direct GO111MODULE=on \
+                 go get "github.com/S7R4nG3/tf-guard@${VERSION}"; then
+              echo "Fetched github.com/S7R4nG3/tf-guard@${VERSION}"
+              exit 0
+            fi
+            echo "Attempt ${attempt} failed; proxy may not have indexed ${VERSION} yet. Retrying..."
+            sleep 15
+          done
+          echo "::error::Could not fetch github.com/S7R4nG3/tf-guard@${VERSION} after retries"
+          exit 1
