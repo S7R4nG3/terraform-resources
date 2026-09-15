@@ -85,6 +85,11 @@ type Plan struct {
 	// A Logger instantiation used for debug logging when toggled using
 	// the above Debug flag.
 	Logger *logrus.Logger
+
+	// An internal lookup table of the planned changes declared in the
+	// Terraform plan, keyed by resource address, that is used to link a
+	// resource's planned change back to its planned values.
+	changes map[string]tfjson.Change
 }
 
 // A Resource instantiates a new Terraform resource object
@@ -116,10 +121,81 @@ type Resource struct {
 	//
 	// It is important to note that not all values in Planned will have
 	// a meaningful result, as Terraform is only able to infer the value of
-	// some resource attributes during a Terraform `apply` execution.
+	// some resource attributes during a Terraform `apply` execution. Those
+	// attributes are described by KnownAfterApply below.
 	//
 	// [terraform-json]: https://github.com/hashicorp/terraform-json
 	Planned tfjson.StateResource
+
+	// Change stores the unmarshalled contents of the change Terraform plans
+	// to make to this resource, provided from the [terraform-json] project.
+	//
+	// Where Planned describes what the resource will look like, Change
+	// describes what Terraform intends to do to get there - the actions it
+	// will take (create, update, delete, etc.), the prior state of the
+	// resource, and which of its attributes are only resolvable during an
+	// apply.
+	//
+	// If the plan contains no change entry for this resource, Change is left
+	// as its zero value with a nil Actions slice.
+	//
+	// [terraform-json]: https://github.com/hashicorp/terraform-json
+	Change tfjson.Change
+
+	// KnownAfterApply enumerates every attribute of this resource whose value
+	// Terraform is unable to resolve until the plan is applied - the values
+	// Terraform renders as "(known after apply)" in its plan output.
+	//
+	// These attributes are deliberately absent from Planned.AttributeValues,
+	// which makes an attribute that will be computed during the apply
+	// indistinguishable from one that was never configured at all. Consulting
+	// KnownAfterApply resolves that ambiguity.
+	//
+	//	if _, set := r.Planned.AttributeValues["kms_key_id"]; !set {
+	//		if r.KnownAfterApply.Has("kms_key_id") {
+	//			... Terraform will compute this during the apply ...
+	//		} else {
+	//			... this attribute genuinely isn't configured ...
+	//		}
+	//	}
+	//
+	// The collection is derived from the `after_unknown` object of the
+	// resource's Change, and is empty for resources that have no change or no
+	// unknown attributes.
+	KnownAfterApply KnownAfterApply
+}
+
+// KnownAfterApply is the collection of a resource's attributes that Terraform
+// has flagged as "(known after apply)".
+//
+// Attributes are ordered deterministically - nested object attributes are
+// sorted by name and collection elements are held in their plan order - so
+// the collection can be safely compared between runs of the same plan.
+type KnownAfterApply []UnknownAttribute
+
+// An UnknownAttribute identifies a single resource attribute whose value
+// Terraform cannot determine until the plan is applied.
+//
+// Terraform reports these attributes as a deeply nested object that mirrors
+// the shape of the resource itself, so an unknown value may live several
+// levels beneath the resource's top level attributes. Each UnknownAttribute
+// flattens one of those nested values into a single addressable entry.
+type UnknownAttribute struct {
+	// Path is the address of the attribute relative to the resource it
+	// belongs to. Nested object attributes are joined with a "." and elements
+	// of a list or set are addressed by their index, producing paths such as
+	// "arn", "tags_all", or "statement[0].resources[1]".
+	//
+	// Terraform does not distinguish an object's attribute names from a map's
+	// keys in its plan output, so a map key containing a "." or a "[" will
+	// produce an ambiguous Path. Use Steps below if your resources include
+	// such keys.
+	Path string
+
+	// Steps is the same address broken into its individual traversal steps,
+	// where each step is either a string naming an object attribute or map
+	// key, or an int indexing into a list or set.
+	Steps []any
 }
 
 // A Module is a container to hold the parsed contents of a

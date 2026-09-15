@@ -19,6 +19,12 @@ import (
 // which include any resources that will be created as a result of
 // declaring a `module` block.
 //
+// Alongside those resources we collect the plan's declared resource
+// changes, which describe the operations Terraform intends to perform
+// and - importantly - which resource attributes will only become known
+// once the plan has been applied. These are held against the Plan so
+// that they can be linked back to their resources later.
+//
 // All of these resource contents are returned and used for linking
 // later. If there is some problem with the linking process, this
 // method can be called directly for a simple slice of raw tfjson
@@ -46,6 +52,7 @@ func (p *Plan) parsePlan() ([]tfjson.StateResource, error) {
 
 	rootModule := planContent.PlannedValues.RootModule
 	children := planContent.PlannedValues.RootModule.ChildModules
+	p.changes = p.parseChanges(planContent.ResourceChanges)
 	p.parseRootModuleResources(rootModule, &resources)
 	p.parseChildModuleResources(children, &resources)
 	p.debugLogger("Finished parsing Plan file.")

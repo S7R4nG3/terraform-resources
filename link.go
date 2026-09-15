@@ -18,8 +18,31 @@ func (p *Plan) linkResourcesWithModules(planModules []Module, planResources []tf
 			Module:  module,
 			Planned: resource,
 		}
+		p.linkResourceWithChange(&this)
 		p.Resources = append(p.Resources, this)
 	}
+}
+
+// linkResourceWithChange attaches the change Terraform plans to make to a
+// resource, matched to it by the resource's address.
+//
+// The attributes that will only be known after the apply are flattened out of
+// that change as they are linked, so that callers are handed a directly usable
+// list rather than the deeply nested object Terraform reports.
+//
+// Not every planned resource has a corresponding change - a resource that is
+// wholly unchanged may be absent from the plan's `resource_changes` collection
+// - so a resource with no match is simply left with its zero valued change.
+func (p *Plan) linkResourceWithChange(resource *Resource) {
+	key := changeKey(resource.Planned.Address, resource.Planned.DeposedKey)
+	change, exists := p.changes[key]
+	if !exists {
+		p.debugLogger(fmt.Sprintf("No planned change declared for resource -- %v --", key))
+		return
+	}
+	resource.Change = change
+	resource.KnownAfterApply = parseKnownAfterApply(change.AfterUnknown)
+	p.debugLogger(fmt.Sprintf("Linked resource -- %v -- with %d attributes known after apply", key, len(resource.KnownAfterApply)))
 }
 
 func parseModuleFromResourceAddress(resource tfjson.StateResource, modules []Module) Module {

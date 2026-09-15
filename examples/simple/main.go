@@ -14,7 +14,9 @@ func main() {
 	plan.GetResources()
 	for _, resource := range plan.Resources {
 		fmt.Printf("%sModule Source: %s", newline(), resource.Module.Source)
-		fmt.Printf("%sResource Address: %s\n", newline(), resource.Planned.Address)
+		fmt.Printf("%sResource Address: %s", newline(), resource.Planned.Address)
+		fmt.Printf("%sPlanned Actions: %v", newline(), resource.Change.Actions)
+		fmt.Printf("%sKnown After Apply: %v\n", newline(), resource.KnownAfterApply.Paths())
 	}
 }
 

@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"sync"
 
 	tfresources "github.com/S7R4nG3/terraform-resources"
 )
-
-var results = []string{}
 
 func main() {
 	plan := tfresources.Plan{
@@ -15,18 +14,18 @@ func main() {
 		ModulesFilePath: "../../testdata/complex/modules.json",
 	}
 	plan.GetResources()
-	buffer := len(plan.Resources)
 	wg := new(sync.WaitGroup)
-	i := make(chan tfresources.Resource, buffer)
 	rules := []asyncWorker{
 		resourcesMustBeTagged,
 		resourcesCannotUsePublicRegistryModules,
+		bucketsMustBeEncrypted,
 	}
 
-	loader(plan.Resources, i, wg)
-	ruleEngine(rules, i, wg, buffer)
+	ruleEngine(rules, plan.Resources, wg)
 	wg.Wait()
 
+	// Rules finish in a nondeterministic order.
+	sort.Strings(results)
 	for _, res := range results {
 		fmt.Println(res)
 	}
